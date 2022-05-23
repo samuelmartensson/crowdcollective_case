@@ -18,7 +18,7 @@ import TextField from "./TextField";
 import CategoryPicker from "./CategoryPicker";
 
 import { database } from "../firebase";
-import { DeleteIcon, QueuedIcon } from "../assets/icons";
+import { CloseIcon, DeleteIcon, QueuedIcon, SearchIcon } from "../assets/icons";
 
 const candidateFields = ["name", "age", "email", "address"] as const;
 
@@ -42,6 +42,8 @@ const CandidateList = () => {
   const { errors } = formState;
   const [candidates, setCandidates] = useState(CATEGORIES);
   const [modalOpen, setModalOpen] = useState(false);
+  const [searchActive, setSearchActive] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate>();
   const [selectedCategory, setSelectedCategory] = useState<Category>();
   const [loading, setLoading] = useState(true);
@@ -61,6 +63,7 @@ const CandidateList = () => {
 
   const updateCandidate = async (candidate: Omit<Candidate, "id">) => {
     if (!selectedCandidate?.id) return;
+    setLoading(true);
 
     const { address, age, email, name } = candidate;
     await updateDoc(doc(database, "candidates", selectedCandidate?.id), {
@@ -72,6 +75,8 @@ const CandidateList = () => {
         ? selectedCategory
         : selectedCandidate.category,
     });
+
+    resetState();
   };
 
   const removeCandidate = async () => {
@@ -140,23 +145,44 @@ const CandidateList = () => {
           <QueuedIcon />
         </LoadingOverlay>
       )}
-      <AddButton
-        onClick={() => {
-          reset();
-          setModalOpen(true);
-          setSelectedCategory("contact");
-        }}
-        color="primary"
-      >
-        Add new
-      </AddButton>
+      <FloatingActionBar>
+        {!searchActive && (
+          <Button
+            onClick={() => {
+              reset();
+              setModalOpen(true);
+              setSelectedCategory("contact");
+            }}
+            color="primary"
+          >
+            Add new
+          </Button>
+        )}
+        {searchActive && (
+          <TextField
+            name="search"
+            onChange={(event) => setSearchTerm(event.target.value)}
+          />
+        )}
+        <Button
+          flexGrow={false}
+          onClick={() => setSearchActive((state) => !state)}
+          color="material"
+          iconLeft={searchActive ? <CloseIcon /> : <SearchIcon />}
+        />
+      </FloatingActionBar>
       <Lists>
         {(Object.keys(CATEGORIES) as Category[]).map((category) => {
           return (
             <Column key={category}>
               <ColumnHead>{category}</ColumnHead>
-              {(Object.values(candidates[category]) as Candidate[]).map(
-                (item) => (
+              {(Object.values(candidates[category]) as Candidate[])
+                .filter((item) =>
+                  Object.values(item).find((value) =>
+                    value.toLowerCase().includes(searchTerm.toLowerCase())
+                  )
+                )
+                .map((item) => (
                   <Row
                     onClick={() => selectCandidate({ ...item, category })}
                     key={item.id}
@@ -164,8 +190,7 @@ const CandidateList = () => {
                     <div className="primary">{item.name}</div>
                     <div className="secondary">{item.email}</div>
                   </Row>
-                )
-              )}
+                ))}
             </Column>
           );
         })}
@@ -203,7 +228,7 @@ const CandidateList = () => {
               list={Object.keys(CATEGORIES) as Category[]}
             />
             <ActionBar>
-              <Button flexGrow={false} type="submit">
+              <Button flexGrow={false} type="submit" loading={loading}>
                 {selectedCandidate ? "Save" : "Submit"}
               </Button>
               <Button
@@ -226,11 +251,16 @@ const ModalHeading = styled.h2`
   margin-bottom: 1rem;
 `;
 
-const AddButton = styled(Button)`
+const FloatingActionBar = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   position: fixed;
   left: 50%;
   bottom: 5%;
   transform: translateX(-50%);
+  min-width: 360px;
+  height: 50px;
 `;
 
 const ActionBar = styled.div`

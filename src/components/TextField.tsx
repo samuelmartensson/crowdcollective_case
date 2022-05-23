@@ -1,3 +1,4 @@
+import { ChangeEvent } from "react";
 import { RegisterOptions, FieldError, UseFormRegister } from "react-hook-form";
 
 import styled from "styled-components";
@@ -9,7 +10,7 @@ interface TextProps {
   placeholder?: string;
   label?: string;
   disabled?: boolean;
-  register: UseFormRegister<any>;
+  register?: UseFormRegister<any>;
   validation?: RegisterOptions;
   error?: FieldError;
   hidden?: boolean;
@@ -17,6 +18,7 @@ interface TextProps {
   borderSize?: "lg" | "md";
   defaultValue?: string;
   style?: any;
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   [rest: string]: any;
 }
 
@@ -34,6 +36,7 @@ const Text = ({
   transparent,
   defaultValue = "",
   style,
+  onChange,
   ...rest
 }: TextProps) => {
   return (
@@ -52,7 +55,8 @@ const Text = ({
         autoComplete="off"
         placeholder={placeholder}
         defaultValue={defaultValue}
-        {...register(name, validation)}
+        {...register?.(name, validation)}
+        onChange={onChange}
       />
       <ErrorMessage error={error} />
     </Container>
