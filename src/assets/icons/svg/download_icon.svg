@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="33px" height="30px" viewBox="0 0 33 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>iconfinder_438-Cloud_Arrow_Down_2124439</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linejoin="round">
+        <g id="iconfinder_438-Cloud_Arrow_Down_2124439" transform="translate(1.000000, 1.000000)" stroke="#004CFE" stroke-width="2">
+            <path d="M21,18 L27,18 C29.209139,18 31,16.209139 31,14 C31,11.790861 29.209139,10 27,10 C26.6339161,10.0069693 26.2705225,10.0641701 25.92,10.17 C26.2290347,6.96890031 24.8068283,3.84609416 22.189112,1.97791238 C19.5713957,0.109730608 16.155863,-0.220005529 13.229112,1.11291238 C10.302361,2.44583029 8.30903474,5.23890031 8,8.44 C6.13344009,7.60075526 3.94387595,7.98374173 2.47301674,9.4067494 C1.00215754,10.8297571 0.546989165,13.0054619 1.32406297,14.8987484 C2.10113677,16.792035 3.9535513,18.0206237 6,18 L11,18" id="Path"></path>
+            <path d="M16,28 L16,14" id="Path"></path>
+            <polyline id="Path" points="21 23 16 28 11 23"></polyline>
+        </g>
+    </g>
+</svg>

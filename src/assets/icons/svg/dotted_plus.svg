@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>+ icon</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-Copy-2" transform="translate(-74.000000, -13.000000)" fill="#1B31F7">
+            <g id="+-icon" transform="translate(75.000000, 14.000000)">
+                <path d="M26,0 C11.648,0 0,11.648 0,26 C0,40.352 11.648,52 26,52 C40.352,52 52,40.352 52,26 C52,11.648 40.352,0 26,0 Z" id="Path" stroke="#1B31F7" stroke-width="2" fill-opacity="0.198235358" stroke-dasharray="5"></path>
+                <rect id="Rectangle" x="24" y="15" width="4" height="22"></rect>
+                <rect id="Rectangle-Copy" transform="translate(26.000000, 26.000000) rotate(90.000000) translate(-26.000000, -26.000000) " x="24" y="15" width="4" height="22"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

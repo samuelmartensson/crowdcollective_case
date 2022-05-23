@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" height="50" width="50" style="white-space: pre;">
+    <style>
+@keyframes a0_o { 0% { opacity: 1; } 11.1111% { opacity: 0; } 27.7778% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes a1_o { 0% { opacity: 1; } 11.1111% { opacity: 1; } 22.2222% { opacity: 0; } 38.8889% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes a2_o { 0% { opacity: 1; } 27.7778% { opacity: 1; } 38.8889% { opacity: 0; } 55.5556% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes loading-move_t { 0% { transform: translate(23px,23px); animation-timing-function: cubic-bezier(0.68,0,0.265,1); } 11.1111% { transform: translate(0px,23px); animation-timing-function: cubic-bezier(0.68,0,0.265,1); } 27.7777% { transform: translate(0px,0px); animation-timing-function: cubic-bezier(0.68,0,0.265,1); } 38.8888% { transform: translate(23px,0px); animation-timing-function: cubic-bezier(0.68,0,0.265,1); } 55.5555% { transform: translate(23px,23px); animation-timing-function: cubic-bezier(0.68,0,0.265,1); } 72.2222% { transform: translate(23px,23px); } 100% { transform: translate(23px,23px); } }
+    </style>
+    <g id="loading" transform="translate(25,25) translate(-21.5,-21.5)">
+        <rect width="20" height="20" fill="#d9e4ff" stroke="none" rx="3" opacity="1" transform="translate(11.5,34.5) translate(-11.5,-11.5)" style="animation: 1.8s linear infinite both a0_o;"/>
+        <rect width="20" height="20" fill="#d9e4ff" stroke="none" rx="3" opacity="1" transform="translate(11.5,11.5) translate(-11.5,-11.5)" style="animation: 1.8s linear infinite both a1_o;"/>
+        <rect width="20" height="20" fill="#d9e4ff" stroke="none" rx="3" opacity="1" transform="translate(34.5,11.5) translate(-11.5,-11.5)" style="animation: 1.8s linear infinite both a2_o;"/>
+        <rect width="20" height="20" fill="#d9e4ff" stroke="none" rx="4" opacity="1" transform="translate(34.5,34.5) translate(-11.5,-11.5)"/>
+        <rect id="loading-move" width="20" height="20" fill="#004cfe" stroke="none" rx="4" transform="translate(34.5,34.5) translate(-11.5,-11.5)" style="animation: 1.8s linear infinite both loading-move_t;"/>
+    </g>
+</svg>

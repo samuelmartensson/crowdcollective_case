@@ -1,0 +1,17 @@
+export const theme = {
+  primary: "#004cfe",
+  lightPrimary: "#d9e4ff",
+  lightPrimaryHover: "rgba(191, 208, 253, 0.2)",
+  secondary: "#fff",
+  background: "#f9f9f9",
+  error: "red",
+  primaryText: "#000",
+  secondaryText: "#929292",
+  borderColor: "rgba(0, 0, 0, 0.15)",
+  borderColorPrimary: "#e6e6fa",
+  dividerColor: "#e6e6e6",
+  filterHover: "#edf1fa",
+  warning: "#ee8700",
+  shadow: "rgb(0 0 0 / 15%) 0px 3px 10px 0px",
+  shadow2: "rgb(0 0 0 / 20%) 0px 3px 10px 0px",
+};

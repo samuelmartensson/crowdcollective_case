@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" height="50" width="50" style="white-space: pre;">
+    <style>
+@keyframes a0_o { 0% { opacity: 1; } 15% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes a1_o { 0% { opacity: 1; } 15% { opacity: 1; } 30% { opacity: 0; } 45% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes a2_o { 0% { opacity: 1; } 30% { opacity: 1; } 45% { opacity: 0; } 60% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes gul_t { 0% { transform: translate(0px,0px); animation-timing-function: cubic-bezier(0.785,0.135,0.15,0.86); } 15% { transform: translate(0px,15px); animation-timing-function: cubic-bezier(0.785,0.135,0.15,0.86); } 30% { transform: translate(0px,30px); animation-timing-function: cubic-bezier(0.785,0.135,0.15,0.86); } 60% { transform: translate(0px,0px); } 100% { transform: translate(0px,0px); } }
+    </style>
+    <g id="loading" transform="translate(25,25.5) translate(-21.5,-21.5)">
+        <rect width="43" height="12" fill="#d9e4ff" stroke="none" rx="3" opacity="1" transform="translate(11.5,11.5) translate(-11.5,-11.5)" style="animation: 2s linear infinite both a0_o;"/>
+        <rect width="43" height="12" fill="#d9e4ff" stroke="none" rx="3" opacity="1" transform="translate(11.5,26.5) translate(-11.5,-11.5)" style="animation: 2s linear infinite both a1_o;"/>
+        <rect width="43" height="12" fill="#d9e4ff" stroke="none" rx="3" opacity="1" transform="translate(11.5,41.5) translate(-11.5,-11.5)" style="animation: 2s linear infinite both a2_o;"/>
+        <rect id="gul" width="43" height="12" fill="#a4b4cb" stroke="none" rx="3" opacity="1" transform="translate(11.5,11.5) translate(-11.5,-11.5)" style="animation: 2s linear infinite both gul_t;"/>
+    </g>
+</svg>
