@@ -12,6 +12,6 @@ export const theme = {
   dividerColor: "#e6e6e6",
   filterHover: "#edf1fa",
   warning: "#ee8700",
-  shadow: "rgb(0 0 0 / 15%) 0px 3px 10px 0px",
+  shadow: "rgb(0 0 0 / 5%) 0px 3px 10px 0px",
   shadow2: "rgb(0 0 0 / 20%) 0px 3px 10px 0px",
 };

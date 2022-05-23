@@ -18,7 +18,14 @@ import TextField from "./TextField";
 import CategoryPicker from "./CategoryPicker";
 
 import { database } from "../firebase";
-import { CloseIcon, DeleteIcon, QueuedIcon, SearchIcon } from "../assets/icons";
+import {
+  CloseIcon,
+  DeleteIcon,
+  ListIcon,
+  ProfilePlaceholderIcon,
+  QueuedIcon,
+  SearchIcon,
+} from "../assets/icons";
 
 const candidateFields = ["name", "age", "email", "address"] as const;
 
@@ -47,6 +54,7 @@ const CandidateList = () => {
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate>();
   const [selectedCategory, setSelectedCategory] = useState<Category>();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const resetState = () => {
     setLoading(false);
@@ -54,11 +62,22 @@ const CandidateList = () => {
     setSelectedCandidate(undefined);
   };
 
+  const setErrorState = (message: string) => {
+    setError(message);
+    setLoading(false);
+  };
+
   const addCandidate = async (candidate: Omit<Candidate, "id">) => {
-    await addDoc(collection(database, "candidates"), {
-      ...candidate,
-      category: "contact",
-    });
+    try {
+      await addDoc(collection(database, "candidates"), {
+        ...candidate,
+        category: "contact",
+      });
+
+      resetState();
+    } catch (err) {
+      setErrorState("Failed to add");
+    }
   };
 
   const updateCandidate = async (candidate: Omit<Candidate, "id">) => {
@@ -66,26 +85,35 @@ const CandidateList = () => {
     setLoading(true);
 
     const { address, age, email, name } = candidate;
-    await updateDoc(doc(database, "candidates", selectedCandidate?.id), {
-      address,
-      age,
-      email,
-      name,
-      category: !!selectedCategory
-        ? selectedCategory
-        : selectedCandidate.category,
-    });
 
-    resetState();
+    try {
+      await updateDoc(doc(database, "candidates", selectedCandidate?.id), {
+        address,
+        age,
+        email,
+        name,
+        category: !!selectedCategory
+          ? selectedCategory
+          : selectedCandidate.category,
+      });
+
+      resetState();
+    } catch (err) {
+      setErrorState("Failed to update");
+    }
   };
 
   const removeCandidate = async () => {
     if (!selectedCandidate?.id) return;
     setLoading(true);
 
-    await deleteDoc(doc(database, "candidates", selectedCandidate?.id));
+    try {
+      await deleteDoc(doc(database, "candidates", selectedCandidate?.id));
 
-    resetState();
+      resetState();
+    } catch (err) {
+      setErrorState("Failed to delete");
+    }
   };
 
   const selectCandidate = (candidate: Candidate & { category: Category }) => {
@@ -105,8 +133,6 @@ const CandidateList = () => {
     } else {
       await addCandidate(fieldValues);
     }
-
-    resetState();
   };
 
   useEffect(() => {
@@ -145,6 +171,12 @@ const CandidateList = () => {
           <QueuedIcon />
         </LoadingOverlay>
       )}
+      {error && (
+        <ErrorToast onClick={() => setError("")}>
+          <div>{error}</div>
+          <div className="info">Click to dismiss</div>
+        </ErrorToast>
+      )}
       <FloatingActionBar>
         {!searchActive && (
           <Button
@@ -174,8 +206,10 @@ const CandidateList = () => {
       <Lists>
         {(Object.keys(CATEGORIES) as Category[]).map((category) => {
           return (
-            <Column key={category}>
-              <ColumnHead>{category}</ColumnHead>
+            <div key={category}>
+              <ColumnHead>
+                <ListIcon /> {category}
+              </ColumnHead>
               {(Object.values(candidates[category]) as Candidate[])
                 .filter((item) =>
                   Object.values(item).find((value) =>
@@ -187,11 +221,14 @@ const CandidateList = () => {
                     onClick={() => selectCandidate({ ...item, category })}
                     key={item.id}
                   >
-                    <div className="primary">{item.name}</div>
-                    <div className="secondary">{item.email}</div>
+                    <ProfilePlaceholderIcon />
+                    <div>
+                      <div className="text primary">{item.name}</div>
+                      <div className="text secondary">{item.email}</div>
+                    </div>
                   </Row>
                 ))}
-            </Column>
+            </div>
           );
         })}
       </Lists>
@@ -229,7 +266,7 @@ const CandidateList = () => {
             />
             <ActionBar>
               <Button flexGrow={false} type="submit" loading={loading}>
-                {selectedCandidate ? "Save" : "Submit"}
+                {selectedCandidate ? "Save" : "Add"}
               </Button>
               <Button
                 onClick={removeCandidate}
@@ -254,12 +291,13 @@ const ModalHeading = styled.h2`
 const FloatingActionBar = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1rem;
   position: fixed;
   left: 50%;
   bottom: 5%;
   transform: translateX(-50%);
-  min-width: 360px;
+  min-width: 320px;
   height: 50px;
 `;
 
@@ -276,15 +314,14 @@ const Typography = styled.div`
 `;
 
 const InputWrapper = styled.div`
-  margin-bottom: 1rem;
+  margin-bottom: 1.75rem;
 `;
 
 const ModalContent = styled.div`
   border-radius: 1rem;
   padding: 2rem;
   background-color: ${(p) => p.theme.secondary};
-  max-width: 900px;
-  min-width: 340px;
+  width: clamp(320px, 90vw, 600px);
 `;
 
 const Container = styled.div`
@@ -298,19 +335,31 @@ const Lists = styled.div`
     ${() => Object.keys(CATEGORIES).length},
     minmax(200px, 1fr)
   );
+  overflow: auto;
+  height: 80vh;
+  padding: 2rem;
 `;
 
 const Row = styled.div`
-  padding: 1rem;
-  border-radius: 1rem;
+  padding: 1.25rem 1rem;
+  border-radius: 0.25rem;
   box-shadow: ${(p) => p.theme.shadow};
   background-color: ${(p) => p.theme.secondary};
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   cursor: pointer;
   transition-duration: 250ms;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-left: 3px solid ${(p) => p.theme.primary};
 
-  > * {
-    word-break: break-all;
+  svg {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .text {
+    word-break: break-word;
   }
 
   .primary {
@@ -318,7 +367,7 @@ const Row = styled.div`
   }
 
   .secondary {
-    font-size: 1rem;
+    font-size: 0.75rem;
     color: ${(p) => p.theme.secondaryText};
   }
 
@@ -332,11 +381,12 @@ const ColumnHead = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid ${(p) => p.theme.borderColor};
+  padding-bottom: 1rem;
+  border-bottom: 1px solid ${(p) => p.theme.dividerColor};
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `;
-
-const Column = styled.div``;
 
 const LoadingOverlay = styled.div`
   display: grid;
@@ -352,5 +402,25 @@ const LoadingOverlay = styled.div`
   svg {
     width: 34px;
     height: 34px;
+  }
+`;
+
+const ErrorToast = styled.div`
+  text-align: center;
+  min-width: 320px;
+  position: fixed;
+  bottom: 8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: ${(p) => p.theme.error};
+  color: ${(p) => p.theme.secondary};
+  padding: 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  z-index: 102;
+
+  .info {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
   }
 `;

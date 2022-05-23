@@ -55,8 +55,8 @@ const Text = ({
         autoComplete="off"
         placeholder={placeholder}
         defaultValue={defaultValue}
-        {...register?.(name, validation)}
         onChange={onChange}
+        {...register?.(name, validation)}
       />
       <ErrorMessage error={error} />
     </Container>
