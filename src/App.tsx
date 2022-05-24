@@ -1,6 +1,6 @@
+import styled from "styled-components";
 import CandidateList from "components/CandidateList/CandidateList";
 import Header from "components/Header/Header";
-import styled from "styled-components";
 
 function App() {
   return (

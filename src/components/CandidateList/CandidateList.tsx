@@ -1,22 +1,20 @@
-import { useEffect, useState } from "react";
-import {
-  doc,
-  updateDoc,
-  DocumentData,
-  addDoc,
-  collection,
-  query,
-  onSnapshot,
-  deleteDoc,
-} from "firebase/firestore";
-import styled from "styled-components";
-import { useForm } from "react-hook-form";
-
 import Button from "components/Button";
 import TextField from "components/TextField";
-
-import { database } from "../../firebase";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  DocumentData,
+  onSnapshot,
+  query,
+  updateDoc,
+} from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import styled from "styled-components";
 import { CloseIcon, QueuedIcon, SearchIcon } from "../../assets/icons";
+import { database } from "../../firebase";
 import CandidateListColumn from "./CandidateListColumn";
 import CandidateListModal from "./CandidateListModal";
 

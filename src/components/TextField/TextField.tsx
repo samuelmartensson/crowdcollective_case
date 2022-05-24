@@ -1,6 +1,5 @@
 import { ChangeEvent } from "react";
-import { RegisterOptions, FieldError, UseFormRegister } from "react-hook-form";
-
+import { FieldError, RegisterOptions, UseFormRegister } from "react-hook-form";
 import styled from "styled-components";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
