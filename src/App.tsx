@@ -1,5 +1,5 @@
-import CandidateList from "components/CandidateList";
-import Header from "components/Header";
+import CandidateList from "components/CandidateList/CandidateList";
+import Header from "components/Header/Header";
 import styled from "styled-components";
 
 function App() {

@@ -12,30 +12,30 @@ import {
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 
-import Button from "./Button";
-import Modal from "./Modal";
-import TextField from "./TextField";
-import CategoryPicker from "./CategoryPicker";
+import Button from "components/Button";
+import TextField from "components/TextField";
 
-import { database } from "../firebase";
-import {
-  CloseIcon,
-  DeleteIcon,
-  ListIcon,
-  ProfilePlaceholderIcon,
-  QueuedIcon,
-  SearchIcon,
-} from "../assets/icons";
+import { database } from "../../firebase";
+import { CloseIcon, QueuedIcon, SearchIcon } from "../../assets/icons";
+import CandidateListColumn from "./CandidateListColumn";
+import CandidateListModal from "./CandidateListModal";
 
 const candidateFields = ["name", "age", "email", "address"] as const;
 
-type Candidate = Record<typeof candidateFields[number], string> & {
+export type FormFields = typeof candidateFields[number];
+export type Candidate = Record<FormFields, string> & {
   id: string;
   category: string;
 };
-type Category = "contact" | "dialogue" | "interview" | "offer" | "closed";
+export type Categories = Record<Category, Record<string, DocumentData>>;
+export type Category =
+  | "contact"
+  | "dialogue"
+  | "interview"
+  | "offer"
+  | "closed";
 
-const CATEGORIES: Record<Category, Record<string, DocumentData>> = {
+const CATEGORIES: Categories = {
   contact: {},
   dialogue: {},
   interview: {},
@@ -120,18 +120,18 @@ const CandidateList = () => {
     setSelectedCategory(candidate.category);
     setSelectedCandidate(candidate);
     Object.entries(candidate).forEach(([key, value]) => {
-      setValue(key as typeof candidateFields[number], value);
+      setValue(key as FormFields, value);
     });
     setModalOpen(true);
   };
 
-  const onSubmit = async (fieldValues: Candidate) => {
+  const onSubmit = (fieldValues: Omit<Candidate, "id">) => {
     setLoading(true);
 
     if (selectedCandidate) {
-      await updateCandidate(fieldValues);
+      updateCandidate(fieldValues);
     } else {
-      await addCandidate(fieldValues);
+      addCandidate(fieldValues);
     }
   };
 
@@ -167,9 +167,9 @@ const CandidateList = () => {
   return (
     <Container>
       {loading && (
-        <LoadingOverlay>
+        <LoadingIndicator>
           <QueuedIcon />
-        </LoadingOverlay>
+        </LoadingIndicator>
       )}
       {error && (
         <ErrorToast onClick={() => setError("")}>
@@ -206,86 +206,42 @@ const CandidateList = () => {
       <Lists>
         {(Object.keys(CATEGORIES) as Category[]).map((category) => {
           return (
-            <div key={category}>
-              <ColumnHead>
-                <ListIcon /> {category}
-              </ColumnHead>
-              {(Object.values(candidates[category]) as Candidate[])
-                .filter((item) =>
-                  Object.values(item).find((value) =>
-                    value.toLowerCase().includes(searchTerm.toLowerCase())
-                  )
-                )
-                .map((item) => (
-                  <Row
-                    onClick={() => selectCandidate({ ...item, category })}
-                    key={item.id}
-                  >
-                    <ProfilePlaceholderIcon />
-                    <div>
-                      <div className="text primary">{item.name}</div>
-                      <div className="text secondary">{item.email}</div>
-                    </div>
-                  </Row>
-                ))}
-            </div>
+            <CandidateListColumn
+              key={category}
+              {...{ candidates, category, searchTerm, selectCandidate }}
+            />
           );
         })}
       </Lists>
-      <Modal
-        closeOnOverlayClick
+      <CandidateListModal
+        heading={selectedCandidate ? "Edit" : "Add"}
         isOpen={modalOpen}
         onClose={() => {
           setModalOpen(false);
           setSelectedCandidate(undefined);
           reset();
         }}
-        type="info"
-      >
-        <ModalContent>
-          <ModalHeading>{selectedCandidate ? "Edit" : "Add"}</ModalHeading>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            {candidateFields.map((field) => {
-              return (
-                <InputWrapper key={field}>
-                  <TextField
-                    label={field.toUpperCase()}
-                    name={field}
-                    register={register}
-                    validation={{ required: true }}
-                    error={errors[field]}
-                  />
-                </InputWrapper>
-              );
-            })}
-            <Typography>Move to</Typography>
-            <CategoryPicker
-              active={selectedCategory}
-              onSelect={(item) => setSelectedCategory(item)}
-              list={Object.keys(CATEGORIES) as Category[]}
-            />
-            <ActionBar>
-              <Button flexGrow={false} type="submit" loading={loading}>
-                {selectedCandidate ? "Save" : "Add"}
-              </Button>
-              <Button
-                onClick={removeCandidate}
-                flexGrow={false}
-                color="material"
-                iconLeft={<DeleteIcon />}
-              />
-            </ActionBar>
-          </form>
-        </ModalContent>
-      </Modal>
+        onDelete={removeCandidate}
+        onSubmit={handleSubmit(onSubmit)}
+        categoryList={Object.keys(CATEGORIES) as Category[]}
+        {...{
+          candidateFields,
+          errors,
+          loading,
+          register,
+          selectedCandidate,
+          selectedCategory,
+          setSelectedCategory,
+        }}
+      />
     </Container>
   );
 };
 
 export default CandidateList;
 
-const ModalHeading = styled.h2`
-  margin-bottom: 1rem;
+const Container = styled.div`
+  padding: 1rem;
 `;
 
 const FloatingActionBar = styled.div`
@@ -301,33 +257,6 @@ const FloatingActionBar = styled.div`
   height: 50px;
 `;
 
-const ActionBar = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 3rem;
-`;
-
-const Typography = styled.div`
-  font-size: 1.25rem;
-  font-weight: bold;
-`;
-
-const InputWrapper = styled.div`
-  margin-bottom: 1.75rem;
-`;
-
-const ModalContent = styled.div`
-  border-radius: 1rem;
-  padding: 2rem;
-  background-color: ${(p) => p.theme.secondary};
-  width: clamp(320px, 90vw, 600px);
-`;
-
-const Container = styled.div`
-  padding: 1rem;
-`;
-
 const Lists = styled.div`
   display: grid;
   gap: 1rem;
@@ -340,55 +269,7 @@ const Lists = styled.div`
   padding: 2rem;
 `;
 
-const Row = styled.div`
-  padding: 1.25rem 1rem;
-  border-radius: 0.25rem;
-  box-shadow: ${(p) => p.theme.shadow};
-  background-color: ${(p) => p.theme.secondary};
-  margin-bottom: 0.75rem;
-  cursor: pointer;
-  transition-duration: 250ms;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  border-left: 3px solid ${(p) => p.theme.primary};
-
-  svg {
-    width: 3rem;
-    height: 3rem;
-  }
-
-  .text {
-    word-break: break-word;
-  }
-
-  .primary {
-    font-weight: bold;
-  }
-
-  .secondary {
-    font-size: 0.75rem;
-    color: ${(p) => p.theme.secondaryText};
-  }
-
-  &:hover {
-    box-shadow: ${(p) => p.theme.shadow2};
-  }
-`;
-
-const ColumnHead = styled.div`
-  text-transform: capitalize;
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid ${(p) => p.theme.dividerColor};
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-const LoadingOverlay = styled.div`
+const LoadingIndicator = styled.div`
   display: grid;
   place-items: center;
   position: fixed;

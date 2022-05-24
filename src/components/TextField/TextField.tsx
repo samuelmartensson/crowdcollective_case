@@ -2,7 +2,7 @@ import { ChangeEvent } from "react";
 import { RegisterOptions, FieldError, UseFormRegister } from "react-hook-form";
 
 import styled from "styled-components";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 interface TextProps {
   name: string;
@@ -83,7 +83,6 @@ const Container = styled.div<{
   disabled?: boolean;
 }>`
   display: ${(p) => (p.hidden ? "none" : "block")};
-  max-width: 400px;
   position: relative;
 
   input {

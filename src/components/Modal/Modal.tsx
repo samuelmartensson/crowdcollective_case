@@ -6,10 +6,10 @@ import React, {
   useState,
 } from "react";
 
-import Portal from "./Portal";
+import Portal from "../Portal/Portal";
 import styled from "styled-components";
 import { AnimatePresence, motion } from "framer-motion";
-import { CloseIcon } from "../assets/icons";
+import { CloseIcon } from "../../assets/icons";
 
 type ModalTypes = "default" | "info";
 
